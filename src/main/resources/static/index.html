@@ -12,7 +12,9 @@
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script async src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
     <script async src="js/bootstrap.js"></script>
     <script async src="js/main.js"></script>
 </head>
@@ -33,7 +35,14 @@
                 <div class="score">
                     <div class="col-xs-4">You</br><span id="your-score">0</span></div>
                     <div class="col-xs-4">SCORE</div>
-                    <div class="col-xs-4">Opponent</br><span id="opp-score">0</span></div>
+                    <div class="col-xs-4">
+                        <div class="status-icon">
+                            <img src="images/check.png" id="opponent-status" class="img-responsive" width="36"
+                                 style="display: inherit">
+                        </div>
+                        Opponent</br>
+                        <span id="opp-score">0</span>
+                    </div>
                 </div>
             </div>
 
@@ -56,11 +65,11 @@
                          data-choice="SCISSORS">
                 </div>
 
-                <div class="col-xs-4 p" style="font-size: 42px; line-height: 200px;"  hidden>
+                <div class="col-xs-4 p" style="font-size: 42px; line-height: 200px;" hidden>
                     VS
                 </div>
 
-                <div class="col-xs-4 s"  hidden>
+                <div class="col-xs-4 s" hidden>
                     <img id="opp-choice-image" src="images/preloader.gif" class="img-responsive left" width="120">
                 </div>
             </div>
