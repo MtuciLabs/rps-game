@@ -72,6 +72,13 @@ public class EventHandler extends TextWebSocketHandler {
 
       Type type = Type.valueOf(jsonMessage.getString("type"));
       //TODO добавьте обработку сообщений из чата
+      if (type == Type.MESSAGE) {
+        Game game = gameService.getGame(gameId);
+        String currentPlayerId = jsonMessage.getString("id");
+        Player opponentPlayer = game.getOpponent(currentPlayerId);
+        WebSocketUtils.sendChatMessage(opponentPlayer.getSession(),message.getPayload());
+      }
+
       if (type == Type.RESULT) {
         handleResultMessage(gameId, jsonMessage);
       }
@@ -90,6 +97,8 @@ public class EventHandler extends TextWebSocketHandler {
     Player currentPlayer = game.getPlayer(currentPlayerId);
     currentPlayer.setChoice(choice);
 
+
+
     if (game.haveChoiceAllPlayers()) {
       List<GameResult> gameResults = gameService.play(game);
       for (GameResult result : gameResults) {
@@ -103,5 +112,27 @@ public class EventHandler extends TextWebSocketHandler {
 
   private String getGameId(WebSocketSession session) {
     return (String) session.getAttributes().get(GAME_ID_ATTRIBUTE);
+  }
+
+
+  private void handleResultMessage(String gameId, JSONObject jsonMessage) {
+    PlayerChoice choice = PlayerChoice.valueOf(jsonMessage.getString("choice"));
+    String currentPlayerId = jsonMessage.getString("id");
+
+    Game game = gameService.getGame(gameId);
+    Player currentPlayer = game.getPlayer(currentPlayerId);
+    currentPlayer.setChoice(choice);
+
+
+
+    if (game.haveChoiceAllPlayers()) {
+      List<GameResult> gameResults = gameService.play(game);
+      for (GameResult result : gameResults) {
+        Player player = result.getPlayer();
+        WebSocketUtils.sendResultMessage(
+            player.getSession(), player.getId(), result.getResult(), result.getOpponentChoice());
+        player.setChoice(null);
+      }
+    }
   }
 }
