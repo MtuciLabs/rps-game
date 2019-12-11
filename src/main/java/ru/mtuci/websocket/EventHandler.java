@@ -74,6 +74,11 @@ public class EventHandler extends TextWebSocketHandler {
       //TODO добавьте обработку сообщений из чата
       if (type == Type.RESULT) {
         handleResultMessage(gameId, jsonMessage);
+      } if (type == Type.MESSAGE) {
+        Game game = gameService.getGame(gameId);
+        String currentPlayaerId = jsonMessage.getString("id");
+        Player opponentPlayer = game.getOpponent(currentPlayaerId);
+        WebSocketUtils.sendChatMessage(opponentPlayer.getSession(), message.getPayload());
       }
     } catch (JSONException e) {
       log.error("Невалидный формат json.", e);
@@ -81,6 +86,8 @@ public class EventHandler extends TextWebSocketHandler {
       log.error("Передан несуществующий тип сообщения", e);
     }
   }
+
+
 
   private void handleResultMessage(String gameId, JSONObject jsonMessage) {
     PlayerChoice choice = PlayerChoice.valueOf(jsonMessage.getString("choice"));
