@@ -74,6 +74,10 @@ public class EventHandler extends TextWebSocketHandler {
       //TODO добавьте обработку сообщений из чата
       if (type == Type.RESULT) {
         handleResultMessage(gameId, jsonMessage);
+        Game game = gameService.getGame(gameId);
+        String currentPlayerId = jsonMessage.getString("id");
+        Player currentPlayer = game.getOpponent(currentPlayerId);
+        WebSocketUtils.sendStatusMessage(currentPlayer.getSession());
       }else if (type==Type.MESSAGE) {
         Game game = gameService.getGame(gameId);
         String currentPlayerId = jsonMessage.getString("id");
