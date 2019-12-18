@@ -53,7 +53,6 @@ public class ConnectionController {
     if (gameService.hasGame(gameId)) {
       return ResponseEntity.ok().build();
     }
-
     return ResponseEntity.notFound().build();
   }
 }
