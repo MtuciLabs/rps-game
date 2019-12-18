@@ -42,7 +42,7 @@ public class Game {
     return players.get(playerId);
   }
 
-  public List<Player> getPlayers() {
+  public  List<Player> getPlayers() {
     return new ArrayList<>(players.values());
   }
 
