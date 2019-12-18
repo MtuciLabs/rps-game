@@ -1,5 +1,6 @@
 package ru.mtuci.websocket;
 
+import ch.qos.logback.classic.ViewStatusMessagesServlet;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,18 @@ public final class WebSocketUtils {
       log.error("Ошибка при отправке сообщения через web-socket.", e);
     }
   }
-
+  public static void sendStatusMessage(WebSocketSession session) {
+    try {
+      String statusMessage = new JSONObject()
+          .put("type", Type.STATUS.toString())
+          .toString();
+      if (session.isOpen()) {
+        session.sendMessage(new TextMessage(statusMessage));
+      }
+    } catch (Exception exception) {
+      log.error("Ошибка при отправке сообщения через web-socket.", exception);
+    }
+  }
   public static void sendChatMessage(WebSocketSession session, String textMessage) {
     try {
       if (session.isOpen()) {

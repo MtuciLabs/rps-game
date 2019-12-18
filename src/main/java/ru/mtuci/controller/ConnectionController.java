@@ -50,7 +50,7 @@ public class ConnectionController {
   public ResponseEntity<String> connect(@PathVariable("gameId") String gameId) {
     log.info("Connection by gameId={}", gameId);
     //TODO Что будет если 3ий игрок захочет подключиться?
-    if (gameService.hasGame(gameId)) {
+    if (gameService.hasGame(gameId)&&!(gameService.isReadyStartGame(gameId))){
       return ResponseEntity.ok().build();
     }
 
