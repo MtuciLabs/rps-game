@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.mtuci.service.GameService;
 
 /**
@@ -49,11 +50,11 @@ public class ConnectionController {
   @GetMapping("{gameId}")
   public ResponseEntity<String> connect(@PathVariable("gameId") String gameId) {
     log.info("Connection by gameId={}", gameId);
+
     //TODO Что будет если 3ий игрок захочет подключиться?
-    if (gameService.hasGame(gameId)) {
+    if (gameService.hasGame(gameId) && !gameService.isReadyStartGame(gameId)) {
       return ResponseEntity.ok().build();
     }
-
     return ResponseEntity.notFound().build();
   }
 }
