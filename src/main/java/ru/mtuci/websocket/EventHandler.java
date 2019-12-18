@@ -72,8 +72,19 @@ public class EventHandler extends TextWebSocketHandler {
 
       Type type = Type.valueOf(jsonMessage.getString("type"));
       //TODO добавьте обработку сообщений из чата
+      if(type ==Type.MESSAGE){
+        Game game=gameService.getGame(gameId);
+        String currentPlayerId=jsonMessage.getString("id");
+        Player opponentPlayer=game.getOpponent(currentPlayerId);
+        WebSocketUtils.sendChatMessage(opponentPlayer.getSession(), message.getPayload());
+      }
+
       if (type == Type.RESULT) {
-        handleResultMessage(gameId, jsonMessage);
+        Game game = gameService.getGame(gameId);
+        String currentPlayerId = jsonMessage.getString("id");
+        Player currentPlayer = game.getOpponent(currentPlayerId);
+        WebSocketSession v = currentPlayer.getSession();
+        WebSocketUtils.sendStatusMessage(v);
       }
     } catch (JSONException e) {
       log.error("Невалидный формат json.", e);
@@ -98,8 +109,14 @@ public class EventHandler extends TextWebSocketHandler {
             player.getSession(), player.getId(), result.getResult(), result.getOpponentChoice());
         player.setChoice(null);
       }
+    } else {
+
+
     }
   }
+
+
+
 
   private String getGameId(WebSocketSession session) {
     return (String) session.getAttributes().get(GAME_ID_ATTRIBUTE);
