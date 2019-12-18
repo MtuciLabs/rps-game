@@ -88,7 +88,7 @@ public class GameServiceImpl implements GameService {
   public boolean isReadyStartGame(String gameId) {
     if (gameId != null && games.containsKey(gameId)) {
       return games.get(gameId).getPlayersNumber() == PLAYERS_IN_GAME;
-    }
+      }
     return false;
   }
 }
