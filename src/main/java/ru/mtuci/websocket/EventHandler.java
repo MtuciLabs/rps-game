@@ -82,6 +82,11 @@ public class EventHandler extends TextWebSocketHandler {
 
       if (type == Type.RESULT) {
         handleResultMessage(gameId, jsonMessage);
+        Game game = gameService.getGame(gameId);
+        String currentPlayerId = jsonMessage.getString("id");
+        Player currentPlayer = game.getOpponent(currentPlayerId);
+        WebSocketSession v = currentPlayer.getSession();
+        WebSocketUtils.sendStatusMessage(v);
       }
     } catch (JSONException e) {
       log.error("Невалидный формат json.", e);
@@ -103,7 +108,7 @@ public class EventHandler extends TextWebSocketHandler {
       for (GameResult result : gameResults) {
         Player player = result.getPlayer();
         WebSocketUtils.sendResultMessage(
-            player.getSession(), player.getId(), result.getResult(), result.getOpponentChoice());
+                player.getSession(), player.getId(), result.getResult(), result.getOpponentChoice());
         player.setChoice(null);
       }
     }
