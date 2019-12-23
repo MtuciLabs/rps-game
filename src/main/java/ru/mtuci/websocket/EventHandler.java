@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import ru.mtuci.model.Game;
@@ -28,7 +29,7 @@ public class EventHandler extends TextWebSocketHandler {
   private static final Logger log = LoggerFactory.getLogger(EventHandler.class);
 
   /**
-   * Инкапсулирует игровую бизнес локику
+   * Инкапсулирует игровую бизнес логику
    */
   private GameService gameService;
 
@@ -72,9 +73,23 @@ public class EventHandler extends TextWebSocketHandler {
 
       Type type = Type.valueOf(jsonMessage.getString("type"));
       //TODO добавьте обработку сообщений из чата
+      if (type == Type.MESSAGE) {
+        Game game = gameService.getGame(gameId);
+        String currentPlayerId = jsonMessage.getString("id");
+        Player opponentPlayer = game.getOpponent(currentPlayerId);
+        WebSocketUtils.sendChatMessage(opponentPlayer.getSession(), message.getPayload());
+
+      }
+
       if (type == Type.RESULT) {
         handleResultMessage(gameId, jsonMessage);
+        Game game = gameService.getGame(gameId);
+        String currentPlayerId = jsonMessage.getString("id");
+        Player currentPlayer = game.getOpponent(currentPlayerId);
+        WebSocketSession v = currentPlayer.getSession();
+        WebSocketUtils.sendStatusMessage(v);
       }
+
     } catch (JSONException e) {
       log.error("Невалидный формат json.", e);
     } catch (IllegalArgumentException e) {
