@@ -56,7 +56,7 @@ public class Game {
         .filter(playerEntry -> !playerEntry.getKey().equals(playerId))
         .map(Entry::getValue)
         .findFirst()
-        .orElseThrow();
+        .orElseThrow(IllegalStateException::new);
   }
 
   private String generateGameId() {
