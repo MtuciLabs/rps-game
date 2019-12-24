@@ -35,10 +35,10 @@ public class ConnectionController {
   @GetMapping
   public ResponseEntity<String> connect() {
     log.info("New connection");
-      String newGameId = gameService.createGame();
-      return ResponseEntity
-          .status(HttpStatus.CREATED)
-          .body(new JSONObject().put("gameId", newGameId).toString());
+    String newGameId = gameService.createGame();
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(new JSONObject().put("gameId", newGameId).toString());
   }
 
   /**
@@ -47,10 +47,11 @@ public class ConnectionController {
    * @return возвращается статус 200 ОК если игровая сессия существует, иначе 404 NOT FOUND.
    */
   @GetMapping("{gameId}")
+
   public ResponseEntity<String> connect(@PathVariable("gameId") String gameId) {
     log.info("Connection by gameId={}", gameId);
-    //TODO Что будет если 3ий игрок захочет подключиться?
-    if (gameService.hasGame(gameId)) {
+    //TODO Что будет если 3ий игрок захочет подключиться? (Тогда фолс)
+    if (gameService.hasGame(gameId) && !gameService.isReadyStartGame(gameId)) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.notFound().build();
