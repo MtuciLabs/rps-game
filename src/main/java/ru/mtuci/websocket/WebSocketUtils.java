@@ -46,6 +46,20 @@ public final class WebSocketUtils {
       log.error("Ошибка при отправке сообщения через web-socket.", e);
     }
   }
+  public static void sendStatusMessage(WebSocketSession session) {
+    try {
+      String resultMessage = new JSONObject()
+
+              .put("type", Type.STATUS.toString())
+              .toString();
+
+      if (session.isOpen()) {
+        session.sendMessage(new TextMessage(resultMessage));
+      }
+    } catch (Exception e) {
+      log.error("Ошибка при отправке сообщения через web-socket.", e);
+    }
+  }
 
   public static void sendChatMessage(WebSocketSession session, String textMessage) {
     try {
