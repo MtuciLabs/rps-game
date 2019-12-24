@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mtuci.service.GameService;
+import ru.mtuci.model.Game;
 
 /**
  * Контроллер используется для создания игровой сессии. HTTP запросы обрабатываются контроллером.
@@ -50,7 +51,7 @@ public class ConnectionController {
   public ResponseEntity<String> connect(@PathVariable("gameId") String gameId) {
     log.info("Connection by gameId={}", gameId);
     //TODO Что будет если 3ий игрок захочет подключиться?
-    if (gameService.hasGame(gameId)) {
+    if (gameService.hasGame(gameId)&& !gameService.isReadyStartGame(gameId)) {
       return ResponseEntity.ok().build();
     }
 
