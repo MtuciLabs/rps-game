@@ -1,0 +1,64 @@
+Index: src/main/java/ru/mtuci/websocket/EventHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/ru/mtuci/websocket/EventHandler.java	(revision ce2c208758e65762fe19954a2e025b7a707b48d3)
++++ src/main/java/ru/mtuci/websocket/EventHandler.java	(date 1577136062487)
+@@ -74,6 +74,11 @@
+       //TODO добавьте обработку сообщений из чата
+       if (type == Type.RESULT) {
+         handleResultMessage(gameId, jsonMessage);
++      }else if (type==Type.MESSAGE) {
++        Game game = gameService.getGame(gameId);
++        String currentPlayerId = jsonMessage.getString("id");
++        Player currentPlayer = game.getOpponent(currentPlayerId);
++        WebSocketUtils.sendChatMessage(currentPlayer.getSession(),message.getPayload());
+       }
+     } catch (JSONException e) {
+       log.error("Невалидный формат json.", e);
+Index: src/main/java/ru/mtuci/controller/ConnectionController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/ru/mtuci/controller/ConnectionController.java	(revision ce2c208758e65762fe19954a2e025b7a707b48d3)
++++ src/main/java/ru/mtuci/controller/ConnectionController.java	(date 1577136062487)
+@@ -50,7 +50,8 @@
+   public ResponseEntity<String> connect(@PathVariable("gameId") String gameId) {
+     log.info("Connection by gameId={}", gameId);
+     //TODO Что будет если 3ий игрок захочет подключиться?
+-    if (gameService.hasGame(gameId)) {
++    if (gameService.hasGame(gameId)&& !gameService.isReadyStartGame(gameId)) {
++
+       return ResponseEntity.ok().build();
+     }
+ 
+Index: src/main/java/ru/mtuci/websocket/WebSocketUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/ru/mtuci/websocket/WebSocketUtils.java	(revision ce2c208758e65762fe19954a2e025b7a707b48d3)
++++ src/main/java/ru/mtuci/websocket/WebSocketUtils.java	(date 1577136062488)
+@@ -46,6 +46,20 @@
+       log.error("Ошибка при отправке сообщения через web-socket.", e);
+     }
+   }
++  public static void sendStatusMessage(WebSocketSession session) {
++    try {
++      String resultMessage = new JSONObject()
++
++              .put("type", Type.STATUS.toString())
++              .toString();
++
++      if (session.isOpen()) {
++        session.sendMessage(new TextMessage(resultMessage));
++      }
++    } catch (Exception e) {
++      log.error("Ошибка при отправке сообщения через web-socket.", e);
++    }
++  }
+ 
+   public static void sendChatMessage(WebSocketSession session, String textMessage) {
+     try {
