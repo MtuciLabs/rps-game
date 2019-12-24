@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet"/>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script async src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script async src="js/bootstrap.js"></script>
+    <script async src="js/main.js"></script>
+</head>
+<body>
+<div class="vertical-center">
+    <div class="container">
+        <div class="page-header text-center">
+            <h1>ROCK PAPER SCISSORS</h1>
+        </div>
+
+        <div class="row text-center url-box" id="url-box">
+            <p>Send url to your friend.</p>
+            <input id="url" type="text" class="form-control text-center"/>
+        </div>
+
+        <div id="main-box" hidden>
+            <div class="row text-center">
+                <div class="score">
+                    <div class="col-xs-4">You</br><span id="your-score">0</span></div>
+                    <div class="col-xs-4">SCORE</div>
+                    <div class="col-xs-4">
+                        <div class="status-icon">
+                            <img src="images/check.png" id="opponent-status" class="img-responsive" width="36"
+                                 style="display: inherit">
+                        </div>
+                        Opponent</br>
+                        <span id="opp-score">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row text-center play-box" id="select-box">
+                <div class="header">
+                    <p>Click the picture</p>
+                    <p class="result-header"></p>
+                </div>
+                <div class="col-xs-4 r">
+                    <img src="images/rock.png" class="img-responsive right icon" width="120" data-choice="ROCK">
+                </div>
+
+                <div class="col-xs-4 p">
+                    <img src="images/paper.png" class="img-responsive center-block icon" width="120"
+                         data-choice="PAPER">
+                </div>
+
+                <div class="col-xs-4 s">
+                    <img src="images/scissors.png" class="img-responsive left icon" width="120"
+                         data-choice="SCISSORS">
+                </div>
+
+                <div class="col-xs-4 p" style="font-size: 42px; line-height: 200px;" hidden>
+                    VS
+                </div>
+
+                <div class="col-xs-4 s" hidden>
+                    <img id="opp-choice-image" src="images/preloader.gif" class="img-responsive left" width="120">
+                </div>
+            </div>
+
+
+            <div class="panel panel-default" style="margin-top: 30px">
+                <div class="panel-heading">CHAT</div>
+                <div id="message-body" class="panel-body chat-panel"></div>
+
+                <div class="panel-footer">
+                    <div class="input-group" id="chat-input">
+                        <input type="text" class="form-control" placeholder="Enter Message" maxlength="300">
+                        <span class="input-group-btn">
+                            <button class="btn btn-success">SEND</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
