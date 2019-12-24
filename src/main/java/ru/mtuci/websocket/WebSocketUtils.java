@@ -1,5 +1,6 @@
 package ru.mtuci.websocket;
 
+import jdk.jshell.Snippet.Status;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +38,12 @@ public final class WebSocketUtils {
           .put("type", Type.RESULT.toString())
           .put("result", result.toString())
           .put("playerChoice", playerChoice.toString())
+
           .toString();
 
       if (session.isOpen()) {
         session.sendMessage(new TextMessage(resultMessage));
+
       }
     } catch (Exception e) {
       log.error("Ошибка при отправке сообщения через web-socket.", e);
@@ -55,5 +58,21 @@ public final class WebSocketUtils {
     } catch (Exception e) {
       log.error("Ошибка при отправке сообщения через web-socket.", e);
     }
+  }
+
+  public static void sendStatusMessage(WebSocketSession session, String status,){
+    try {
+      String statusMessage = new JSONObject()
+          .put("type",Type.STATUS.toString())
+
+          .toString();
+
+      if (session.isOpen()) {
+        session.sendMessage((new TextMessage(statusMessage));
+
+      }
+    } catch (Exception e) {
+      log.error("Ошибка при отправке сообщения через web-socket.", e);
+  }
   }
 }

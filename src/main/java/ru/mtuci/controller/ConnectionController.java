@@ -49,11 +49,11 @@ public class ConnectionController {
   @GetMapping("{gameId}")
   public ResponseEntity<String> connect(@PathVariable("gameId") String gameId) {
     log.info("Connection by gameId={}", gameId);
-    //TODO Что будет если 3ий игрок захочет подключиться?
+    //TODO Что будет если 3ий игрок захочет под ключиться?
     if (gameService.hasGame(gameId)) {
       return ResponseEntity.ok().build();
     }
-
-    return ResponseEntity.notFound().build();
+    if (gameService.isReadyStartGame(gameId));
+      return ResponseEntity.notFound().build();     
   }
 }
