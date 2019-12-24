@@ -1,7 +1,5 @@
 package ru.mtuci.websocket;
-
 import static ru.mtuci.websocket.WebSocketConfig.Consts.GAME_ID_ATTRIBUTE;
-
 import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,24 +23,28 @@ import ru.mtuci.service.GameService;
  */
 @Component
 public class EventHandler extends TextWebSocketHandler {
-
   private static final Logger log = LoggerFactory.getLogger(EventHandler.class);
 
   /**
    * Инкапсулирует игровую бизнес локику
    */
-  private GameService gameService;
 
+  private GameService gameService;
   public EventHandler(GameService gameService) {
     this.gameService = gameService;
   }
 
+
+
   @Override
+
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
     log.info("Socket Connected");
     String gameId = getGameId(session);
     Player newPlayer = new Player(session);
     gameService.addPlayer(gameId, newPlayer);
+
+
 
     if (gameService.isReadyStartGame(gameId)) {
       for (Player player : gameService.getGame(gameId).getPlayers()) {
@@ -50,11 +52,10 @@ public class EventHandler extends TextWebSocketHandler {
       }
     }
   }
-
   @Override
+
   public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
     log.info("Socket Closed: [{}] {}", closeStatus.getCode(), closeStatus.getReason());
-
     String gameId = getGameId(session);
     Game finishedGame = gameService.remove(gameId);
     if (finishedGame != null) {
@@ -63,14 +64,12 @@ public class EventHandler extends TextWebSocketHandler {
       }
     }
   }
-
   @Override
   protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
     log.info("Message received: {}", message.getPayload());
     try {
       String gameId = getGameId(session);
       JSONObject jsonMessage = new JSONObject(message.getPayload());
-
       Type type = Type.valueOf(jsonMessage.getString("type"));
       //TODO добавьте обработку сообщений из чата
       if (type == Type.RESULT) {
@@ -87,7 +86,6 @@ public class EventHandler extends TextWebSocketHandler {
         WebSocketSession s = currentPlayer.getSession();
         WebSocketUtils.sendChatMessage(s,message.getPayload());
       }
-
     } catch (JSONException e) {
       log.error("Невалидный формат json.", e);
     } catch (IllegalArgumentException e) {
@@ -113,7 +111,6 @@ public class EventHandler extends TextWebSocketHandler {
       }
     }
   }
-
   private String getGameId(WebSocketSession session) {
     return (String) session.getAttributes().get(GAME_ID_ATTRIBUTE);
   }

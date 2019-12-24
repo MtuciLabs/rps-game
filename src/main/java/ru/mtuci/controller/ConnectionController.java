@@ -35,10 +35,10 @@ public class ConnectionController {
   @GetMapping
   public ResponseEntity<String> connect() {
     log.info("New connection");
-      String newGameId = gameService.createGame();
-      return ResponseEntity
-          .status(HttpStatus.CREATED)
-          .body(new JSONObject().put("gameId", newGameId).toString());
+    String newGameId = gameService.createGame();
+    return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(new JSONObject().put("gameId", newGameId).toString());
   }
 
   /**
@@ -50,10 +50,9 @@ public class ConnectionController {
   public ResponseEntity<String> connect(@PathVariable("gameId") String gameId) {
     log.info("Connection by gameId={}", gameId);
     //TODO Что будет если 3ий игрок захочет подключиться?
-    if (gameService.hasGame(gameId)) {
+    if (gameService.hasGame(gameId) && !gameService.isReadyStartGame(gameId)) {
       return ResponseEntity.ok().build();
     }
-
     return ResponseEntity.notFound().build();
   }
 }
