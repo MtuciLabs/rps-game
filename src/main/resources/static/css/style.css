@@ -27,6 +27,16 @@
     box-shadow: 0px 0px 10px rgba(118, 118, 120, 1);
 }
 
+.show-icon {
+    visibility: visible;
+}
+
+.status-icon {
+    margin-left: -40px;
+    display: inline-block;
+    visibility: hidden;
+}
+
 #url {
     width: 500px;
     margin: 0 auto;
