@@ -29,18 +29,13 @@ public final class WebSocketUtils {
     }
   }
 
-  public static void sendResultMessage(WebSocketSession session, String playerId, Result result,
-      PlayerChoice playerChoice) {
+  public static void sendStatusMessage(WebSocketSession session) {
     try {
-      String resultMessage = new JSONObject()
-          .put("id", playerId)
-          .put("type", Type.RESULT.toString())
-          .put("result", result.toString())
-          .put("playerChoice", playerChoice.toString())
+      String statusMessage = new JSONObject()
+          .put("type", Type.STATUS.toString())
           .toString();
-
       if (session.isOpen()) {
-        session.sendMessage(new TextMessage(resultMessage));
+        session.sendMessage(new TextMessage(statusMessage));
       }
     } catch (Exception e) {
       log.error("Ошибка при отправке сообщения через web-socket.", e);
@@ -51,6 +46,23 @@ public final class WebSocketUtils {
     try {
       if (session.isOpen()) {
         session.sendMessage(new TextMessage(textMessage)); //HtmlUtils.htmlEscape(message)
+      }
+    } catch (Exception e) {
+      log.error("Ошибка при отправке сообщения через web-socket.", e);
+    }
+  }
+
+  public static void sendResultMessage(WebSocketSession session, String playerId, Result result, PlayerChoice playerChoice) {
+    try {
+      String resultMessage = new JSONObject()
+          .put("id", playerId)
+          .put("type", Type.RESULT.toString())
+          .put("result", result.toString())
+          .put("playerChoice", playerChoice.toString())
+          .toString();
+
+      if (session.isOpen()) {
+        session.sendMessage(new TextMessage(resultMessage));
       }
     } catch (Exception e) {
       log.error("Ошибка при отправке сообщения через web-socket.", e);
