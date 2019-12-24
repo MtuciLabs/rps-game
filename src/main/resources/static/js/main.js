@@ -105,6 +105,9 @@ function onMessage(event) {
     case 'RESULT':
       showResult(incomingMessage);
       break;
+    case 'STATUS':
+      showOpponentStatusIcon();
+      break;
     case 'CONNECTION':
       playerId = incomingMessage.id;
       showConnection(incomingMessage.connection);
@@ -149,6 +152,10 @@ function showResult(resultObj) {
   setTimeout(restartGame, 2000);
 }
 
+function showOpponentStatusIcon() {
+  document.getElementById('opponent-status').classList.add('show-icon');
+}
+
 function restartGame() {
   let children = document.querySelector('#select-box').children;
 
@@ -167,6 +174,7 @@ function restartGame() {
   document.getElementById('opp-choice-image').src = 'images/preloader.gif';
 
   toggleHidden(children, 4, children.length);
+  document.getElementById('opponent-status').classList.remove('show-icon');
 }
 
 function toggleHidden(elements, start, end) {
