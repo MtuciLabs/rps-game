@@ -60,7 +60,6 @@ public final class WebSocketUtils {
       log.error("Ошибка при отправке сообщения через web-socket.", e);
     }
   }
-
   public static void sendChatMessage(WebSocketSession session, String textMessage) {
     try {
       if (session.isOpen()) {
