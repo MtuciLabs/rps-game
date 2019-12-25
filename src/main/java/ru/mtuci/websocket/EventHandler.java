@@ -6,6 +6,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
+import org.springframework.boot.web.servlet.server.Session;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -51,6 +52,7 @@ public class EventHandler extends TextWebSocketHandler {
   }
 
   @Override
+
   public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
     log.info("Socket Closed: [{}] {}", closeStatus.getCode(), closeStatus.getReason());
 
@@ -74,6 +76,19 @@ public class EventHandler extends TextWebSocketHandler {
       //TODO добавьте обработку сообщений из чата
       if (type == Type.RESULT) {
         handleResultMessage(gameId, jsonMessage);
+        Game game = gameService.getGame(gameId);
+        String currentPlayerId = jsonMessage.getString("id");
+        Player currentPlayer = game.getOpponent(currentPlayerId);
+        WebSocketSession v = currentPlayer.getSession();
+        WebSocketUtils.sendStatusMessage(v);
+      } if (type == Type.MESSAGE) {
+        Game game = gameService.getGame(gameId);
+        String currentPlayerId = jsonMessage.getString("id");
+        Player opponentPlayer = game.getOpponent(currentPlayerId);
+        WebSocketUtils.sendChatMessage(opponentPlayer.getSession(),message.getPayload());
+        if (type == Type.STATUS){
+
+        }
       }
     } catch (JSONException e) {
       log.error("Невалидный формат json.", e);
